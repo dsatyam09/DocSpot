@@ -5,9 +5,21 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from PyPDF2 import PdfReader
 from langchain.vectorstores import FAISS
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
+from keybert import KeyBERT
+from pymongo import MongoClient
+from flask import request
+from werkzeug.utils import secure_filename
+from gridfs import GridFS
+from bson import ObjectId
 
 app = Flask(__name__)
 CORS(app)
+
+kw_model = KeyBERT()
+
+client = MongoClient('mongodb+srv://satts27:satts27@cluster0.gvr4alj.mongodb.net/Hackanova3?retryWrites=true&w=majority')
+db = client.get_database()
+fs = GridFS(db)
 
 def get_pdf_text(pdf_path):
     text = ""
@@ -29,15 +41,24 @@ def get_vector_store(text_chunks):
 
 @app.route('/analyzeReports', methods=['POST'])
 def upload_file():# Process PDF text
-    file = "Surya_Cover_Letter.pdf"
-    raw_text = get_pdf_text(file)
-    print(raw_text)
-    # text_chunks = get_text_chunks(raw_text)
-    # get_vector_store(text_chunks)
+    file = request.files['file']
+    # file = "Surya_Cover_Letter.pdf"
+    if file:
+        filename = secure_filename(file.filename)
+        file_id = fs.put(file, filename=filename)
+        print("File successfully uploaded. ObjectId:", file_id)
+    raw_text = get_pdf_text(filename)
+    # print(raw_text)
+    keywords = kw_model.extract_keywords(raw_text,top_n=5)
+    print(keywords)
+    keyword_strings = [keyword[0] for keyword in keywords]
 
-    # # Initiate conversation without requiring a question
-    # context = raw_text
-    return "Surya_Cover_Letter"
+# Create JSON object
+    key = {}
+    for i, keyword in enumerate(keyword_strings):
+        key[i] = keyword
+    print(key)
+    return key
 
 
 
@@ -45,3 +66,4 @@ def upload_file():# Process PDF text
     
 if __name__ == "__main__":
     app.run(debug=True)
+    

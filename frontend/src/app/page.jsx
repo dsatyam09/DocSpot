@@ -1,4 +1,5 @@
 import Navbar from "@/components/Navbar/Navbar";
+import FileForm from "@/components/FileForm/FileForm";
 
 const Home = () => {
   return (
@@ -8,6 +9,7 @@ const Home = () => {
         <Navbar />
       </div>
       <div>Home page Home page Home page Home page Home pageHome page</div>
+      <FileForm />
     </div>
   );
 };
