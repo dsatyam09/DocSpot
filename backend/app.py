@@ -152,6 +152,48 @@ def upload_file():# Process PDF text
     # print(key)
     return key
 
+@app.route("/search")
+def search_autocomplete():
+    query = request.args.get("q", "").lower()
+    query_payload = {
+        "size": MAX_SIZE,
+        "query": {
+            "bool": {
+                "must": [
+                    {
+                        "span_near": {
+                            "clauses": [
+                                {
+                                    "span_multi": {
+                                        "match": {
+                                            "fuzzy": {
+                                                "keywords": {
+                                                    "value": "oracle",
+                                                    "fuzziness": "AUTO"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    }
+
+    response = requests.get(ELASTICSEARCH_ENDPOINT, json=query_payload)
+
+    if response.status_code == 200:
+        results = response.json()["hits"]["hits"]
+        result_names = [result["_source"]["name"] for result in results]
+        return jsonify(result_names)
+    else:
+        return jsonify([])  # Return an empty list if there's an error
+
+if _name_ == "_main_":
+    app.run(debug=True)
 @app.route('/retrieve', methods=['POST'])
 def retrieve():
     return""
