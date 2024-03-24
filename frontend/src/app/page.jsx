@@ -1,6 +1,7 @@
 import Navbar from "@/components/Navbar/Navbar";
 import FileForm from "@/components/FileForm/FileForm";
 import HeroSection from "@/components/HeroSection/HeroSection";
+import WavyBackground from "@/components/WavyBackground/WavyBackground";
 
 const Home = () => {
   return (
@@ -11,7 +12,8 @@ const Home = () => {
       </div>
       <div>Home page Home page Home page Home page Home pageHome page</div>
       <FileForm />
-      <HeroSection />
+      {/* <HeroSection /> */}
+      <WavyBackground />
     </div>
   );
 };
