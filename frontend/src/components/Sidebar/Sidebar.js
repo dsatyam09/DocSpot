@@ -8,7 +8,7 @@ const Sidebar = () => {
   const pathname = usePathname();
   return (
     <>
-      <nav className="md:left-0 md:block md:fixed md:top-0 md:bottom-0 md:overflow-y-auto md:flex-row md:flex-nowrap md:overflow-hidden shadow-xl bg-white flex flex-wrap items-center justify-between relative md:w-64 z-10 py-4 px-6">
+      <nav className="md:left-0 bg-gray-300 md:block md:fixed md:top-0 md:bottom-0 md:overflow-y-auto md:flex-row md:flex-nowrap md:overflow-hidden shadow-xl bg-black flex flex-wrap items-center justify-between relative md:w-64 z-10 py-4 px-6">
         <div className="md:flex-col md:items-stretch md:min-h-full md:flex-nowrap px-0 flex flex-wrap items-center justify-between w-full mx-auto">
           {/* Toggler */}
           <button
@@ -21,15 +21,15 @@ const Sidebar = () => {
           {/* Brand */}
           <div className="flex flex-row justify-around ">
             <img
-              src="https://res.cloudinary.com/atharva7/image/upload/v1678446486/samples/istockphoto-1335169133-612x612-removebg-preview_shco6q.png"
+              src="https://res.cloudinary.com/duws62b88/image/upload/v1711273075/logo_itrsjo.svg"
               alt="up"
               className="w-16 h-16 object-cover rounded-full cursor-pointer mt-1"
             />
             <Link
               href="/"
-              className="pt-2 text-blueGray-700 text-xl font-bold leading-relaxed inline-block mr-4 py-4 whitespace-nowrap uppercase"
+              className="pt-2 text-blueGray-700 text-xl font-bold leading-relaxed inline-block mr-4 py-15 whitespace-nowrap uppercase"
             >
-              Guardify
+              Scholarly
             </Link>
           </div>
           {/* User */}
@@ -56,7 +56,7 @@ const Sidebar = () => {
                   href="/"
                   className="md:block text-left md:pb-2 text-blueGray-600 mr-0 inline-block whitespace-nowrap text-sm uppercase font-bold p-4 px-0"
                 >
-                  Guardify
+                  Scholarly
                 </Link>
               </div>
               <div className="w-6/12 flex justify-end">
@@ -75,8 +75,8 @@ const Sidebar = () => {
             <div className="mb-3 pt-0">
               <input
                 type="text"
-                placeholder="Search"
-                className="border-0 px-3 py-2 h-12 border-solid  border-blueGray-500 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-base leading-snug shadow-none outline-none focus:outline-none w-full font-normal"
+                placeholder="Upload PDF notes"
+                className="border-0 px-3 py-2 h-12 border-solid  border-blueGray-500 placeholder-blueGray-300 text-blueGray-600 bg-black rounded text-base leading-snug shadow-none outline-none focus:outline-none w-full font-normal"
               />
             </div>
           </form>
@@ -84,8 +84,8 @@ const Sidebar = () => {
           {/* Divider */}
           <hr className="my-4 md:min-w-full" />
           {/* Heading */}
-          <h6 className="md:min-w-full text-blueGray-500 text-xs uppercase font-bold block pt-1 pb-4 no-underline">
-            Features
+          <h6 className="md:min-w-full text-blueGray-500 text-xl uppercase font-bold block pt-1 pb-4 no-underline">
+            Services
           </h6>
           {/* Navigation */}
 
@@ -110,7 +110,7 @@ const Sidebar = () => {
                       : "text-blueGray-300")
                   }
                 ></i>
-                Analyze Followings
+                Upload PDF
               </Link>
             </li>
 
@@ -134,7 +134,7 @@ const Sidebar = () => {
                       : "text-blueGray-300")
                   }
                 ></i>
-                View Complaints
+                View/Download PDF
               </Link>
             </li>
 
@@ -158,7 +158,7 @@ const Sidebar = () => {
                       : "text-blueGray-300")
                   }
                 ></i>
-                Analyze Text
+                Ask Questions
               </Link>
             </li>
 
@@ -182,7 +182,7 @@ const Sidebar = () => {
                       : "text-blueGray-300")
                   }
                 ></i>
-                CyberCell Locator
+                Search PDF Notes
               </Link>
             </li>
 
@@ -206,7 +206,7 @@ const Sidebar = () => {
                       : "text-blueGray-300")
                   }
                 ></i>
-                Guidelines
+                Translate
               </Link>
             </li>
 
