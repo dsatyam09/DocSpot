@@ -1,5 +1,22 @@
 "use server";
 
+export const searching = async (searchValue) => {
+  try {
+    const response = await fetch("http://127.0.0.1:5000/search", {
+      method: "POST",
+      body: searchValue,
+    });
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+
+    return await response.json(); // Assuming the server responds with JSON
+  } catch (error) {
+    console.error("Error uploading file:", error);
+    throw error; // Re-throw the error to propagate it further if needed
+  }
+};
+
 export const addFile = async (formData) => {
   try {
     const response = await fetch("http://127.0.0.1:5000/analyzeReports", {

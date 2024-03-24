@@ -24,7 +24,7 @@ const FileForm = () => {
   };
 
   return (
-    <div>
+    <div className="bg-black-100 text-white">
       <div>
         <form onSubmit={handleSubmit}>
           <input

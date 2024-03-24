@@ -98,7 +98,7 @@ const WavyBackground = ({
   return (
     <div
       className={cn(
-        "h-screen flex flex-col items-center justify-center",
+        "h-screen flex flex-col items-center justify-center relative",
         containerClassName
       )}
     >
@@ -113,10 +113,10 @@ const WavyBackground = ({
       <div className={cn("relative z-10", className)} {...props}>
         {/* {children} */}
         <div className="py-20 mx-auto text-center flex flex-col items-center max-w-3xl">
-          <h1 className="text-4xl font-bold tracking-tight text-white">
+          <h1 className="text-7xl font-bold tracking-tight text-white">
             {" "}
             Your <span className="text-emerald-300">Notebook</span> from
-            Anywehere to <span className="text-emerald-300">Everywhere</span>
+            Anywhere to <span className="text-emerald-300">Everywhere</span>
           </h1>
         </div>
       </div>

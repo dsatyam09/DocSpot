@@ -1,5 +1,6 @@
-from flask import Flask
+from flask import Flask, jsonify, send_file
 import json
+import requests
 from flask_cors import CORS
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from PyPDF2 import PdfReader
@@ -12,6 +13,7 @@ from werkzeug.utils import secure_filename
 from gridfs import GridFS
 from bson import ObjectId
 from elasticsearch import Elasticsearch
+import base64
 
 app = Flask(__name__)
 CORS(app)
@@ -46,16 +48,77 @@ def get_vector_store(text_chunks):
     vector_store = FAISS.from_texts(text_chunks, embedding=embeddings)
     vector_store.save_local("faiss_index")
 
+@app.route("/search", methods=['POST'])
+def a():
+    elasticsearch_endpoint = "https://899818254916480eb7e3932801d735cb.us-central1.gcp.cloud.es.io:443/doc/_search"
+    # query = request.args.get("q", "").lower()
+    username = "elastic"
+    password = "pmbYfq7ejtkeWD1t9KcqqByp"
+    
+    # Encode the credentials
+    credentials = f"{username}:{password}"
+    encoded_credentials = base64.b64encode(credentials.encode()).decode()
+    
+    # Set up the request headers with the Authorization header
+    headers = {
+        "Authorization": f"Basic {encoded_credentials}",
+        "Content-Type": "application/json"
+    }
+    query_payload = {
+        "size": 10,
+        "query": {
+            "bool": {
+                "must": [
+                    {
+                        "span_near": {
+                            "clauses": [
+                                {
+                                    "span_multi": {
+                                        "match": {
+                                            "fuzzy": {
+                                                "keywords": {
+                                                    "value": "oracle",
+                                                    "fuzziness": "AUTO"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    }
+
+    response = requests.post(elasticsearch_endpoint, json=query_payload, headers=headers)
+    print(response)
+    if response.status_code == 200:
+        results = response.json()["hits"]["hits"]
+        result_names = []
+        for result in results:
+            # Check if the 'name' field exists in the document
+            if "_source" in result and "id" in result["_source"]:
+                result_names.append(result["_source"]["id"])
+            else:
+                # Handle the case where the 'name' field is missing
+                result_names.append("Unknown")
+        return jsonify(result_names)
+    else:
+        return jsonify([]) 
+
 
 @app.route('/try', methods=['POST'])
 def trying():
-    # client = Elasticsearch(
-    # "https://899818254916480eb7e3932801d735cb.us-central1.gcp.cloud.es.io:443",
-    # api_key="4DJadrUqR9Cp7-XTSHcKJA"
-    # )
+    id = "65ffb16c3fe95c25efc12785"
+    object_id = ObjectId(id)
+    file_object = fs.find_one({"_id": object_id})
+    if file_object is None:
+        return "File not found", 404
     
-    print(es.info())
-    return ""
+    # Send the file to the client for download
+    return send_file(file_object, as_attachment=True, mimetype='application/pdf', download_name='downloaded_file.pdf')
 
 @app.route('/analyzeReports', methods=['POST'])
 def upload_file():# Process PDF text
@@ -67,7 +130,7 @@ def upload_file():# Process PDF text
         file_id = fs.put(file, filename=filename)
         print("File successfully uploaded. ObjectId:", file_id)
     raw_text = get_pdf_text(filename)
-    # print(raw_text)
+    print(raw_text)
     keywords = kw_model.extract_keywords(raw_text,top_n=5)
     print(keywords)
     # for i in range(5):
@@ -78,6 +141,7 @@ def upload_file():# Process PDF text
             "id": file_id,
             "keywords": combined_string,
         }
+    print(keyword_strings)
     document['id'] = str(document['id'])
     json_data = json.dumps(document)
     es.index(index="doc", document=document)
