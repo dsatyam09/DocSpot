@@ -31,7 +31,7 @@ const Navbar = () => {
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
               placeholder="Search"
-              className="mr-2 px-2 py-1 rounded border border-gray-400 text-grey-200" style={{ width: '45vw' }}
+              className="mr-2 px-2 py-1 rounded-md border border-gray-400 bg-gray-600 text-grey-300" style={{ width: '45vw' }}
             />
             {/* Button to trigger search */}
             <button

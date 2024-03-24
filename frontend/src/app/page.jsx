@@ -10,9 +10,9 @@ const Home = () => {
       <div className="w-full flex flex-col items-center justify-center py-8 bg-black-100">
         <Navbar />
       </div>
-      <div className="bg-black-100 text-white">
+      {/* <div className="bg-black-100 text-white">
         Home page Home page Home page Home page Home pageHome page
-      </div>
+      </div> */}
       <FileForm />
       {/* <HeroSection /> */}
       <WavyBackground />
