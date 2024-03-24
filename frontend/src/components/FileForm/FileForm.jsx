@@ -24,15 +24,15 @@ const FileForm = () => {
   };
 
   return (
-    <div className="bg-black-100 text-white">
+    <div className="bg-black-100 text-white px-5 flex items-center">
       <div>
-        <form onSubmit={handleSubmit}>
-          <input
+        <form onSubmit={handleSubmit} className="bg-grey-400 text-white px-3 py-1 rounded">
+          <input 
             type="file"
             name="file"
             onChange={(e) => setFile(e.target.files[0])}
           />
-          <button type="submit">Submit</button>
+          <button type="submit" className="bg-blue-500 text-white px-3 py-1 rounded" >Submit</button>
         </form>
       </div>
     </div>
