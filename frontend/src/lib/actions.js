@@ -1,5 +1,9 @@
 "use server";
 
+import { signIn } from "./auth";
+import { User } from "./models";
+import { connectToDb } from "./utils";
+
 export const searching = async (searchValue) => {
   try {
     const response = await fetch("http://127.0.0.1:5000/search", {
@@ -34,4 +38,14 @@ export const addFile = async (formData) => {
     console.error("Error uploading file:", error);
     throw error; // Re-throw the error to propagate it further if needed
   }
+};
+
+export const handleGoogleLogin = async () => {
+  "use server";
+  await signIn("google");
+};
+
+export const handleGoogleLogout = async () => {
+  "use server";
+  await signOut();
 };

@@ -14,6 +14,11 @@ from gridfs import GridFS
 from bson import ObjectId
 from elasticsearch import Elasticsearch
 import base64
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain.chains.question_answering import load_qa_chain
+from langchain.prompts import PromptTemplate
+import google.generativeai as genai
+import os
 
 app = Flask(__name__)
 CORS(app)
@@ -23,6 +28,9 @@ kw_model = KeyBERT()
 client = MongoClient('mongodb+srv://satts27:satts27@cluster0.gvr4alj.mongodb.net/Hackanova3?retryWrites=true&w=majority')
 db = client.get_database()
 fs = GridFS(db)
+
+os.getenv("GOOGLE_API_KEY")
+genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
 
 es = Elasticsearch(
@@ -47,6 +55,38 @@ def get_vector_store(text_chunks):
     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001",google_api_key="AIzaSyAfItvxFBe_CzrjqOokhzkBEoHMpNyvOb8")
     vector_store = FAISS.from_texts(text_chunks, embedding=embeddings)
     vector_store.save_local("faiss_index")
+    return vector_store, embeddings
+
+def get_conversational_chain():
+
+    prompt_template = """
+    Answer the question as detailed as possible from the provided context, make sure to provide all the details, if the answer is not in
+    provided context just say, "answer is not available in the context", don't provide the wrong answer\n\n
+    Context:\n {context}?\n
+    Question: \n{question}\n
+
+    Answer:
+    """
+
+    model = ChatGoogleGenerativeAI(model="gemini-pro",
+                             temperature=0.3)
+
+    prompt = PromptTemplate(template = prompt_template, input_variables = ["context", "question"])
+    chain = load_qa_chain(model, chain_type="stuff", prompt=prompt)
+
+    return chain
+
+def user_input(user_question, embeddings):  # Pass embeddings as an argument
+    new_db = FAISS.load_local("faiss_index.pickle", embeddings, allow_dangerous_deserialization=True)
+    docs = new_db.similarity_search(user_question)
+    chain = get_conversational_chain()
+    response = chain({"input_documents": docs, "question": user_question}, return_only_outputs=True)
+    print(response)
+
+
+
+
+
 
 @app.route("/search", methods=['POST'])
 def a():
@@ -111,14 +151,23 @@ def a():
 
 @app.route('/try', methods=['POST'])
 def trying():
-    id = "65ffb16c3fe95c25efc12785"
+    request_data = request.get_json()
+    id = request_data.get("id")
+    # id = "65ffb16c3fe95c25efc12785"
     object_id = ObjectId(id)
     file_object = fs.find_one({"_id": object_id})
     if file_object is None:
         return "File not found", 404
     
     # Send the file to the client for download
-    return send_file(file_object, as_attachment=True, mimetype='application/pdf', download_name='downloaded_file.pdf')
+    # return send_file(file_object, as_attachment=True, mimetype='application/pdf', download_name='downloaded_file.pdf')
+    return send_file(
+            file_object,
+            mimetype='application/pdf',
+            as_attachment=True,  # Ensure it's downloaded as an attachment
+            attachment_filename='downloaded_file.pdf'
+        )
+
 
 @app.route('/analyzeReports', methods=['POST'])
 def upload_file():# Process PDF text
@@ -152,48 +201,6 @@ def upload_file():# Process PDF text
     # print(key)
     return key
 
-@app.route("/search")
-def search_autocomplete():
-    query = request.args.get("q", "").lower()
-    query_payload = {
-        "size": MAX_SIZE,
-        "query": {
-            "bool": {
-                "must": [
-                    {
-                        "span_near": {
-                            "clauses": [
-                                {
-                                    "span_multi": {
-                                        "match": {
-                                            "fuzzy": {
-                                                "keywords": {
-                                                    "value": "oracle",
-                                                    "fuzziness": "AUTO"
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                ]
-            }
-        }
-    }
-
-    response = requests.get(ELASTICSEARCH_ENDPOINT, json=query_payload)
-
-    if response.status_code == 200:
-        results = response.json()["hits"]["hits"]
-        result_names = [result["_source"]["name"] for result in results]
-        return jsonify(result_names)
-    else:
-        return jsonify([])  # Return an empty list if there's an error
-
-if _name_ == "_main_":
-    app.run(debug=True)
 @app.route('/retrieve', methods=['POST'])
 def retrieve():
     return""
