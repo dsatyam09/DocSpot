@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { searching } from "@/lib/actions";
 
-const Navbar = () => {
+const ProfileNavbar = () => {
   const [searchValue, setSearchValue] = useState("");
   const [searchResults, setSearchResults] = useState(null);  // State to store search results
 
@@ -62,28 +62,13 @@ const Navbar = () => {
   }
   return (
     <div
-      className="flex flex-col items-center justify-center p-4 rounded-full"
+      className="flex flex-col items-center justify-center rounded-full"
       style={{ width: "95vw" }}
     >
      
       <div className="w-full max-w-screen-xl text-white">
         <div className="flex flex-col items-center justify-between mx-auto h-full px-4">
-          <div className="flex items-center">
-            <img
-              src="https://res.cloudinary.com/duws62b88/image/upload/v1711273075/logo_itrsjo.svg"
-              alt="logo"
-              className="w-12 h-12 object-cover rounded-full cursor-pointer mt-1"
-            />
-            <div class="text-white-900">
-              <p class="text-6xl font-bold px-3 py-8">DocSpot</p>
-            </div>
-          </div>
-
-          <div>
-          <p style={textStle}>Grow Smart Together</p>
-          <p style={textStle1}> Your <span className="text-emerald-300">Notebook</span> from Anywhere
-        to <span className="text-emerald-300">Everywhere</span></p>
-          </div>
+        
 
           <div className="flex items-center mt-4">
             {" "}
@@ -96,7 +81,7 @@ const Navbar = () => {
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
               placeholder="Search"
-              className="mr-2 px-5 py-5 rounded-md border bg-gray-600 text-grey-300"
+              className="mr-2 px-5 rounded-md border bg-gray-600 text-grey-300"
             />
             <span>
             <button onClick={handleSearch} className="px-3 py-3 rounded-full border bg-gray-600 text-grey-300">
@@ -137,4 +122,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default ProfileNavbar;

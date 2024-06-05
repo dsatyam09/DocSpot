@@ -23,13 +23,13 @@ const Sidebar = () => {
             <img
               src="https://res.cloudinary.com/duws62b88/image/upload/v1711273075/logo_itrsjo.svg"
               alt="up"
-              className="w-16 h-16 object-cover rounded-full cursor-pointer mt-1"
+              className="w-10 h-10 object-cover rounded-full cursor-pointer mt-1"
             />
             <Link
               href="/"
-              className="pt-2 text-blueGray-700 text-xl font-bold leading-relaxed inline-block mr-4 py-15 whitespace-nowrap uppercase"
+              className="pt-2 text-blueGray-700 text-xl font-bold leading-relaxed inline-block mr-4 py-5 whitespace-nowrap uppercase"
             >
-              Scholarly
+              DocSpot
             </Link>
           </div>
           {/* User */}
@@ -56,7 +56,7 @@ const Sidebar = () => {
                   href="/"
                   className="md:block text-left md:pb-2 text-blueGray-600 mr-0 inline-block whitespace-nowrap text-sm uppercase font-bold p-4 px-0"
                 >
-                  Scholarly
+                  DocSpot
                 </Link>
               </div>
               <div className="w-6/12 flex justify-end">
@@ -71,7 +71,7 @@ const Sidebar = () => {
             </div>
           </div>
           {/* Form */}
-          <form className="mt-6 mb-4 md:hidden">
+          <form className="mt-6 mb-4 md:visible">
             <div className="mb-3 pt-0">
               <input
                 type="text"
